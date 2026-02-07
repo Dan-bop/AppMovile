@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaysuApp">
         <activity
-            android:name=".SplashActivity"
+            android:name=".HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,8 @@
         <activity android:name=".LoginActivity"/>
         <activity android:name=".CorreoActivity"/>
         <activity android:name=".CelularActivity"/>
-        <activity android:name=".HomeActivity"/>
+
+
     </application>
 
 </manifest>
