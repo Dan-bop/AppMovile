@@ -38,7 +38,7 @@ class CorreoActivity : AppCompatActivity() {
 
             // Configuración para que el enlace abra tu App directamente
             val actionCodeSettings = ActionCodeSettings.newBuilder()
-                .setUrl("https://maysuapp.page.link/login") // Debes configurar esto en Firebase Console
+                .setUrl("https://maysuapp.firebaseapp.com")
                 .setHandleCodeInApp(true)
                 .setAndroidPackageName(
                     "com.maysu.maysuapp",
