@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaysuApp">
         <activity
-            android:name=".products.ProductoActivity"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,9 +24,7 @@
         <activity android:name=".CorreoActivity"/>
         <activity android:name=".CelularActivity"/>
         <activity android:name=".HomeActivity"/>
-
-
-
+        <activity android:name=".products.ProductoActivity"/>
 
     </application>
 

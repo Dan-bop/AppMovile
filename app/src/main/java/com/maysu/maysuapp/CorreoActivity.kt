@@ -2,71 +2,85 @@ package com.maysu.maysuapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 
 class CorreoActivity : AppCompatActivity() {
+
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // 1. Forzar el modo claro siempre
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         setContentView(R.layout.activity_correo)
 
-        // 2. Declarar los componentes
-        val etEmail = findViewById<EditText>(R.id.etEmail)
-        val btnSiguiente = findViewById<ImageButton>(R.id.btnSiguienteCorreo)
-        val btnBack = findViewById<ImageButton>(R.id.btnBack)
+        auth = FirebaseAuth.getInstance()
 
-        // 3. Configurar el botón de atrás
-        btnBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+        val etEmail = findViewById<EditText>(R.id.etEmail)
+        val etPassword = findViewById<EditText>(R.id.etPassword)
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
+        val btnBack = findViewById<ImageButton>(R.id.btnBack)
+        val tvRegister = findViewById<TextView>(R.id.tvRegister) // Agregado el TextView
+
+        btnBack.setOnClickListener { finish() }
+
+        // Si el usuario hace clic directamente en "Regístrate"
+        tvRegister.setOnClickListener {
+            val email = etEmail.text.toString().trim()
+            val password = etPassword.text.toString().trim()
+            abrirRegistro(email, password)
         }
 
-        // --- ESTA ES LA SECCIÓN QUE AGREGAMOS ---
-        // 4. Lógica para enviar el correo al presionar la flecha verde
-        btnSiguiente.setOnClickListener {
+        btnLogin.setOnClickListener {
             val email = etEmail.text.toString().trim()
+            val password = etPassword.text.toString().trim()
 
-            // Configuración para que el enlace abra tu App directamente
-            val actionCodeSettings = ActionCodeSettings.newBuilder()
-                .setUrl("https://maysuapp.firebaseapp.com")
-                .setHandleCodeInApp(true)
-                .setAndroidPackageName(
-                    "com.maysu.maysuapp",
-                    true, /* installIfNotAvailable */
-                    "12"  /* minimumVersion */
-                )
-                .build()
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-            FirebaseAuth.getInstance().sendSignInLinkToEmail(email, actionCodeSettings)
+            // Intentar Iniciar Sesión
+            auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(this, "Enlace enviado a $email. Revisa tu bandeja.", Toast.LENGTH_LONG).show()
+                        irAlHome()
                     } else {
-                        Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                        val exception = task.exception
+                        // Caso 1: El correo no está registrado
+                        if (exception is FirebaseAuthInvalidUserException) {
+                            abrirRegistro(email, password)
+                        }
+                        // Caso 2: Contraseña incorrecta
+                        else if (exception is FirebaseAuthInvalidCredentialsException) {
+                            Toast.makeText(this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show()
+                        }
+                        // Otros errores (Red, etc.)
+                        else {
+                            Toast.makeText(this, "Error: ${exception?.message}", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
         }
-        // ----------------------------------------
+    }
 
-        // 5. Lógica de escucha para que el botón aparezca/desaparezca
-        etEmail.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                val correo = s.toString()
-                val esValido = correo.contains("@") && correo.contains(".")
-                btnSiguiente.visibility = if (esValido) View.VISIBLE else View.GONE
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
+    private fun abrirRegistro(email: String, pass: String) {
+        // Usamos la función estática 'newInstance' para pasar datos de forma segura
+        val dialog = RegisterDialogFragment.newInstance(email, pass)
+        dialog.show(supportFragmentManager, "registerDialog")
+    }
+
+    private fun irAlHome() {
+        val intent = Intent(this, HomeActivity::class.java)
+        // Limpiamos el historial para que no pueda volver atrás al login
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 }

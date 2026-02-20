@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:background="@android:color/white">
 
     <ImageButton
         android:id="@+id/btnBack"
@@ -13,6 +15,7 @@
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:tint="@android:color/black"
         android:contentDescription="Volver" />
 
     <TextView
@@ -33,6 +36,7 @@
         android:layout_height="wrap_content"
         android:text="TE ENVIAREMOS UN CÓDIGO PARA CONFIRMARLO"
         android:textSize="12sp"
+        android:textColor="#666666"
         android:letterSpacing="0.1"
         android:textStyle="bold"
         android:layout_marginTop="32dp"
@@ -45,6 +49,8 @@
         android:orientation="horizontal"
         android:layout_marginTop="40dp"
         android:gravity="center_vertical"
+        android:padding="8dp"
+        android:background="@drawable/bg_edittext"
         app:layout_constraintTop_toBottomOf="@id/tvSubtitle">
 
         <com.hbb20.CountryCodePicker
@@ -54,19 +60,26 @@
             app:ccp_defaultNameCode="PE"
             app:ccp_showFullName="false"
             app:ccp_showNameCode="false"
-            android:background="@drawable/bg_rounded_border"
-            android:padding="8dp"/>
+            app:ccp_contentColor="@android:color/black"
+            app:ccp_textSize="18sp"
+            android:padding="4dp"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:background="#DDDDDD"
+            android:layout_marginHorizontal="8dp"/>
 
         <EditText
             android:id="@+id/etPhoneNumber"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/black"
-            android:hint="Número de teléfono"
+            android:textColor="@android:color/black"
+            android:hint="999 999 999"
+            android:textColorHint="#A9A9A9"
             android:inputType="phone"
             android:textSize="18sp"
-            android:layout_marginStart="12dp"
             android:background="@android:color/transparent" />
     </LinearLayout>
 
@@ -74,20 +87,15 @@
         android:id="@+id/btnRecibirCodigo"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginBottom="32dp"
-        android:backgroundTint="#2ECC71"
-        android:background="@drawable/bg_button_green"
+        android:layout_marginBottom="16dp"
         android:text="Recibir código por SMS"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:visibility="gone"
-        app:drawableStartCompat="@drawable/ic_arrow_forward24"
-        android:paddingStart="20dp"
+        app:backgroundTint="@color/green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

@@ -35,6 +35,7 @@ android {
     }
 }
 
+
 dependencies {
 
     // AndroidX
@@ -49,15 +50,17 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.0.0")
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-analytics")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.firestore.ktx)
 
     // Google Sign In
     implementation(libs.google.auth)
 
     // Phone country picker
     implementation("com.hbb20:ccp:2.7.3")
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
     // Tests
     testImplementation(libs.junit)
@@ -67,5 +70,5 @@ dependencies {
     // Fragment
     implementation("androidx.fragment:fragment-ktx:1.7.1")
 
-}
 
+}
